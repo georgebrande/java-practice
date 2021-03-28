@@ -3,15 +3,20 @@ package com.doctor.appointment.controller;
 import com.doctor.appointment.dto.CompanyDto;
 import com.doctor.appointment.dto.CreateEmployeeDto;
 import com.doctor.appointment.dto.DoctorDto;
+import com.doctor.appointment.dto.EmployeeHobbyDto;
 import com.doctor.appointment.model.Doctor;
 import com.doctor.appointment.service.CompanyService;
 import com.doctor.appointment.service.DoctorService;
 import com.doctor.appointment.service.EmployeeService;
+import com.doctor.appointment.service.MediaService;
+import com.doctor.appointment.util.HttpStatusHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.doctor.appointment.util.HttpStatusHelper.success;
 
 //controller => service => repository
 
@@ -27,6 +32,28 @@ public class TestController {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private MediaService mediaService;
+
+    @Autowired
+    HttpStatusHelper httpStatusHelper;
+
+    @PostMapping("/addPicture")
+    public ResponseEntity<Object> addPictureToEmployee(@RequestParam String fileName,
+                                       @RequestParam Long employeeId,
+                                       @RequestParam String type) {
+        try {
+            return success("ok", mediaService.addMediaToEmployee(fileName, employeeId, type));
+        } catch (Exception e) {
+            return httpStatusHelper.commonErrorMethod(e);
+        }
+    }
+
+    @PostMapping("/addHobby")
+    public ResponseEntity<Object> addHobbyToEmployee(@RequestBody EmployeeHobbyDto employeeHobbyDto) {
+        return employeeService.addHobbyToEmployee(employeeHobbyDto);
+    }
+
     @PostMapping("/createCompany")
     public String createCompany(@RequestBody CompanyDto companyDto) {
         return companyService.createCompany(companyDto);
@@ -35,7 +62,11 @@ public class TestController {
 //    creezi un employee John Doe catre compania Euroins by Id
     @PostMapping("/createEmployee")
     public ResponseEntity<Object> createEmployee(@RequestBody CreateEmployeeDto createEmployeeDto) {
-        return employeeService.createEmployeeAndAssignToCompany(createEmployeeDto);
+        try {
+            return success("employee", employeeService.createEmployeeAndAssignToCompany(createEmployeeDto));
+        } catch (Exception e) {
+
+        }
     }
 
     @GetMapping("/getCompanyByName")
@@ -44,9 +75,15 @@ public class TestController {
         return companyService.getCompanyByName(companyName);
     }
 
+//    controller -> service -> repository
     @GetMapping("/getEmployee/{id}")
-    public ResponseEntity<Object> getEmployeeById(@PathVariable Long id) {
-        return employeeService.getEmployeeById(id);
+    public ResponseEntity<Object> getEmployeeById(@PathVariable Long id) throws Exception {
+        try {
+            return success("employee ",
+                    employeeService.getEmployeeById(id));
+        } catch (Exception e) {
+            return httpStatusHelper.commonErrorMethod(e);
+        }
     }
 
     @GetMapping("/getAll")
