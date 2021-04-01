@@ -16,7 +16,8 @@ public class ResourceServer extends ResourceServerConfigurerAdapter {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .authorizeRequests()
-                .antMatchers("/publicEndpoint").permitAll()
+                .antMatchers("/publicEndpoint",
+                        "secondOne").permitAll()
                 .anyRequest().authenticated();
 
     }

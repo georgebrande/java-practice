@@ -12,6 +12,7 @@ import com.doctor.appointment.service.MediaService;
 import com.doctor.appointment.util.HttpStatusHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,6 +38,20 @@ public class TestController {
 
     @Autowired
     HttpStatusHelper httpStatusHelper;
+
+    @PreAuthorize("hasRole('ROLE_DEFAULT')")
+    @GetMapping("/userAccess")
+    public String getUserAccess() {
+        return "user";
+    }
+
+//    ROLE_ADMIN > ROLE_DEFAULT
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/adminAccess")
+    public String getAdminAccess() {
+        return "admin";
+    }
 
     @PostMapping("/addPicture")
     public ResponseEntity<Object> addPictureToEmployee(@RequestParam String fileName,
