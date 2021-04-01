@@ -59,20 +59,26 @@ public class TestController {
         return companyService.createCompany(companyDto);
     }
 
-//    creezi un employee John Doe catre compania Euroins by Id
-    @PostMapping("/createEmployee")
-    public ResponseEntity<Object> createEmployee(@RequestBody CreateEmployeeDto createEmployeeDto) {
-        try {
-            return success("employee", employeeService.createEmployeeAndAssignToCompany(createEmployeeDto));
-        } catch (Exception e) {
-
-        }
-    }
+////    creezi un employee John Doe catre compania Euroins by Id
+//    @PostMapping("/createEmployee")
+//    public ResponseEntity<Object> createEmployee(@RequestBody CreateEmployeeDto createEmployeeDto) {
+//        try {
+//            return success("employee", employeeService.createEmployeeAndAssignToCompany(createEmployeeDto));
+//        } catch (Exception e) {
+//
+//        }
+//    }
 
     @GetMapping("/getCompanyByName")
     public ResponseEntity<Object> getCompanyByName(@RequestParam String companyName)
             throws Exception {
         return companyService.getCompanyByName(companyName);
+    }
+
+
+    @GetMapping("/publicEndpoint")
+    public String getPublicEndpoint() {
+        return "public";
     }
 
 //    controller -> service -> repository
