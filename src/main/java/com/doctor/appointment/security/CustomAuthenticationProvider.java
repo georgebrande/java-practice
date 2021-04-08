@@ -1,5 +1,6 @@
 package com.doctor.appointment.security;
 
+import com.doctor.appointment.dto.AuthDto;
 import com.doctor.appointment.model.Doctor;
 import com.doctor.appointment.model.Role;
 import com.doctor.appointment.repository.DoctorRepository;
@@ -32,15 +33,18 @@ public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
         String email = authentication.getName().trim();
         String inputPassword = authentication.getCredentials().toString();
 
-        Optional<Doctor> optionalDoctor = doctorRepository.findByEmail(email);
 
-        if (optionalDoctor.isPresent()) {
+        Optional<AuthDto> optionalAuthDto = doctorRepository.getByEmailWithPasswordAndRole(email);
+//        Optional<Doctor> optionalDoctor = doctorRepository.findByEmail(email);
 
-            Doctor doctor = optionalDoctor.get();
-            String dbPassword = doctor.getPassword();
+        if (optionalAuthDto.isPresent()) {
+
+            AuthDto authDto = optionalAuthDto.get();
+//            Doctor doctor = optionalDoctor.get();
+            String dbPassword = authDto.getPassword();
 
             if (BCrypt.checkpw(inputPassword, dbPassword)) {
-                UserDetails userDetails = UserPrinciple.build(doctor);
+                UserDetails userDetails = UserPrinciple.build(authDto);
                 Authentication newAuth = new UsernamePasswordAuthenticationToken(userDetails,
                         null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(newAuth);

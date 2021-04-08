@@ -1,5 +1,6 @@
 package com.doctor.appointment.service;
 
+import com.doctor.appointment.dto.AuthDto;
 import com.doctor.appointment.model.Doctor;
 import com.doctor.appointment.repository.DoctorRepository;
 import com.doctor.appointment.security.UserPrinciple;
@@ -20,10 +21,11 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        Optional<Doctor> optionalDoctor = doctorRepository.findByEmail(email);
+        Optional<AuthDto> optionalAuthDto = doctorRepository.getByEmailWithPasswordAndRole(email);
+//        Optional<Doctor> optionalDoctor = doctorRepository.findByEmail(email);
 
-        if (optionalDoctor.isPresent()) {
-            return UserPrinciple.build(optionalDoctor.get());
+        if (optionalAuthDto.isPresent()) {
+            return UserPrinciple.build(optionalAuthDto.get());
         } throw new UsernameNotFoundException("No User found with email: " + email);
 
     }

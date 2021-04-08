@@ -1,5 +1,6 @@
 package com.doctor.appointment.security;
 
+import com.doctor.appointment.dto.AuthDto;
 import com.doctor.appointment.model.Doctor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,16 +20,16 @@ public class UserPrinciple implements UserDetails {
         this.authorities=authorities;
     }
 
-    public static UserPrinciple build(Doctor doctor) {
-        String email = doctor.getEmail();
+    public static UserPrinciple build(AuthDto authDto) {
+        String email = authDto.getEmail();
+        String role = authDto.getRole();
         List<GrantedAuthority> authorityList = new ArrayList<>();
 
-        String role = "";
-        if (email.equals("ana@cst.ro")) {
-            role = "ROLE_ADMIN";
-        } else {
-            role = "ROLE_DEFAULT";
-        }
+//        if (email.equals("ana@cst.ro")) {
+//            role = "ROLE_ADMIN";
+//        } else {
+//            role = "ROLE_DEFAULT";
+//        }
 
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(role);
         authorityList.add(simpleGrantedAuthority);
