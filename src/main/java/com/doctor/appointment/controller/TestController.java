@@ -1,18 +1,20 @@
 package com.doctor.appointment.controller;
 
-import com.doctor.appointment.dto.CompanyDto;
-import com.doctor.appointment.dto.CreateEmployeeDto;
-import com.doctor.appointment.dto.DoctorDto;
-import com.doctor.appointment.dto.EmployeeHobbyDto;
+import com.doctor.appointment.dto.*;
+import com.doctor.appointment.exception.CustomEntityNotFoundException;
 import com.doctor.appointment.model.Doctor;
+import com.doctor.appointment.repository.DoctorRepository;
+import com.doctor.appointment.security.UserPrinciple;
 import com.doctor.appointment.service.CompanyService;
 import com.doctor.appointment.service.DoctorService;
 import com.doctor.appointment.service.EmployeeService;
 import com.doctor.appointment.service.MediaService;
 import com.doctor.appointment.util.HttpStatusHelper;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +40,23 @@ public class TestController {
 
     @Autowired
     HttpStatusHelper httpStatusHelper;
+
+    @Autowired
+    DoctorRepository doctorRepository;
+
+    @GetMapping("/getProfile")
+    public UserInfoDto getProfile(OAuth2Authentication auth2Authentication) throws CustomEntityNotFoundException {
+        UserPrinciple userPrinciple = (UserPrinciple) auth2Authentication.getPrincipal();
+
+        String email = userPrinciple.getUsername();
+        Doctor doctor = doctorRepository.findByEmail(email).orElseThrow(() -> new CustomEntityNotFoundException(Doctor.class));
+
+        UserInfoDto infoDto = new UserInfoDto();
+        infoDto.setEmail(doctor.getEmail());
+        infoDto.setAge(doctor.getAge());
+        infoDto.setName(doctor.getName());
+        return infoDto;
+    }
 
     @PreAuthorize("hasRole('ROLE_DEFAULT')")
     @GetMapping("/userAccess")
@@ -116,6 +135,25 @@ public class TestController {
     public String addDoctor(@RequestBody DoctorDto doctorDto) {
         return doctorService.addDoctor(doctorDto);
 
+    }
+
+    @PostMapping("/get-doctors")
+    public DoctorResponseDto getPaginatedDoctors(@RequestBody PagingDto pagingDto) {
+        int page = pagingDto.getPage();
+        int size = pagingDto.getSize();
+
+        int firstResults = page * size;
+        int maxResults = firstResults + size;
+
+        List<Doctor> doctors = doctorRepository.getPaginatedDoctors(firstResults, maxResults);
+
+
+        DoctorResponseDto responseDto = new DoctorResponseDto();
+        responseDto.setDoctors(doctors);
+        responseDto.setFrom(firstResults);
+        responseDto.setTo(maxResults);
+
+        return responseDto;
     }
 
     @GetMapping("/test")
