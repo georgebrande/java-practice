@@ -10,4 +10,5 @@ public interface DoctorRepositoryCustom {
     Optional<AuthDto> getByEmailWithPasswordAndRole(String email);
 
     List<Doctor> getPaginatedDoctors(int firstResults, int maxResults);
+    long getTotalDoctors();
 }

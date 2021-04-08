@@ -146,12 +146,13 @@ public class TestController {
         int maxResults = firstResults + size;
 
         List<Doctor> doctors = doctorRepository.getPaginatedDoctors(firstResults, maxResults);
-
+        long totalDoctors = doctorRepository.getTotalDoctors();
 
         DoctorResponseDto responseDto = new DoctorResponseDto();
         responseDto.setDoctors(doctors);
         responseDto.setFrom(firstResults);
         responseDto.setTo(maxResults);
+        responseDto.setTotalDoctors(totalDoctors);
 
         return responseDto;
     }

@@ -6,14 +6,14 @@ import java.util.List;
 
 public class DoctorResponseDto {
     private List<Doctor> doctors;
-    private int totalDoctors;
+    private long totalDoctors;
     private int from;
     private int to;
 
     public DoctorResponseDto() {
     }
 
-    public DoctorResponseDto(List<Doctor> doctors, int totalDoctors, int from, int to) {
+    public DoctorResponseDto(List<Doctor> doctors, long totalDoctors, int from, int to) {
         this.doctors=doctors;
         this.totalDoctors=totalDoctors;
         this.from=from;
@@ -28,11 +28,11 @@ public class DoctorResponseDto {
         this.doctors=doctors;
     }
 
-    public int getTotalDoctors() {
+    public long getTotalDoctors() {
         return totalDoctors;
     }
 
-    public void setTotalDoctors(int totalDoctors) {
+    public void setTotalDoctors(long totalDoctors) {
         this.totalDoctors=totalDoctors;
     }
 

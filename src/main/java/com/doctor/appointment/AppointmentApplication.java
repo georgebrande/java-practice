@@ -5,6 +5,7 @@ import com.doctor.appointment.model.Role;
 import com.doctor.appointment.repository.DoctorRepository;
 import com.doctor.appointment.repository.HobbyRepository;
 import com.doctor.appointment.repository.RoleRepository;
+import com.doctor.appointment.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,12 +26,18 @@ public class AppointmentApplication implements CommandLineRunner {
 	@Autowired
 	RoleRepository roleRepository;
 
+	@Autowired
+	EmailService emailService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(AppointmentApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
+
+		emailService.sendMail("george.brande@cst.ro", "test subject",
+				"test text");
 
 //		Optional<Doctor> optionalDoctor = doctorRepository.findByEmail("gxg@cst.ro");
 //		if (optionalDoctor.isPresent()) {

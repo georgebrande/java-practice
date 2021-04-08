@@ -43,4 +43,14 @@ public class DoctorRepositoryImpl implements DoctorRepositoryCustom {
 
         return doctors;
     }
+
+    @Override
+    public long getTotalDoctors() {
+
+        String query = "select count(d) from Doctor d ";
+
+        long totalDoctors = entityManager.createQuery(query, Long.class)
+                .getSingleResult();
+        return totalDoctors;
+    }
 }
